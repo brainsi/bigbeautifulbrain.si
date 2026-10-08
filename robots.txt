@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bigbeautifulbrain.si/sitemap.xml

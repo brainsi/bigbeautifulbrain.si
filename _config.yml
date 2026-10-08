@@ -1,0 +1,6 @@
+# The pages are prebuilt by _src/build.py. GitHub Pages runs Jekyll on this repository only to
+# copy the built files and to keep the build source and these notes out of the published site.
+exclude:
+  - README.md
+  - _src
+  - _scratch
