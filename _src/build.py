@@ -61,31 +61,35 @@ CLOSE = ('<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5
 CHEV = ('<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" '
         'stroke="#8b939b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
-SERVICES = [
-    ('what-we-do.html#diligence', 'Diligence Brain', 'Operating reality before you sign'),
-    ('what-we-do.html#hundred-days', '100-Day Brain', 'The value creation plan, made visible'),
-    ('what-we-do.html#operate', 'Operating Brain', 'One source of truth through the hold'),
-    ('what-we-do.html#grow', 'Growth Brain', 'Add-ons captured into the platform'),
-    ('what-we-do.html#exit', 'Exit Brain', 'Evidence organized for the sale'),
-    ('what-we-do.html#portfolio', 'Portfolio Brain', 'A fund-level view across companies'),
+IMPACT = [
+    ('impact.html#diligence', 'Before you sign', 'Know what you are buying'),
+    ('impact.html#first-two-weeks', 'The first two weeks', 'Strategy while the deal is fresh'),
+    ('impact.html#hundred-days', 'The first 100 days', 'The right things first'),
+    ('impact.html#hold', 'Through the hold', 'Run on facts, measure what works'),
+    ('impact.html#grow', 'Buy and build', 'Add-ons without losing pace'),
+    ('impact.html#exit', 'At exit', 'Show a buyer how it works'),
+    ('impact.html#portfolio', 'Across the portfolio', 'Every company in one view'),
 ]
-PLATFORM = [
-    ('platform.html#anatomy', 'Anatomy of a Business Brain', 'Eight layers, cited facts, human review'),
-    ('platform.html#agents', 'The agent runtime', 'Runners, routers, models, skills, connections'),
-    ('platform.html#connections', 'MCP, RAG and API', 'How the brain reaches your systems and your sponsor'),
-    ('platform.html#governance', 'Governance and security', 'Access levels, audit trail, ownership'),
-]
-WORK = [
-    ('how-we-work.html#phases', 'How an engagement runs', 'Scope, capture, diagnose, act, compound'),
-    ('how-we-work.html#team', 'The forward-deployed team', 'Interviews, data discovery, heavy lifting'),
-    ('how-we-work.html#models', 'Ways to start', 'Pilot, 100 days, subscription'),
-    ('how-we-work.html#faq', 'Questions we hear', 'Ownership, models, data, time'),
+APPROACH = [
+    ('approach.html#implementation', 'The two-week implementation', 'From kickoff to strategy in ten working days'),
+    ('approach.html#subscription', 'The subscription', 'Kept current, in practice and measured'),
+    ('approach.html#team', 'Agents and people', 'Who does what, and the heavy lift'),
+    ('approach.html#trust', 'Trust and security', 'Evidence, review, access, ownership'),
+    ('approach.html#faq', 'Questions we hear', 'Time, pricing, data, models'),
 ]
 COMPANY = [
-    ('about.html', 'About us', 'Why we built Big Beautiful Brain'),
+    ('about.html', 'About us', 'Why we started Big Beautiful Brain'),
     ('insights/index.html', 'Insights', 'Perspectives on owning and running businesses'),
-    ('contact.html', 'Contact', 'Start with one portfolio company'),
+    ('contact.html', 'Contact', 'Plan the first two weeks on one company'),
 ]
+# Pages that moved when the site was reorganized around outcomes; each gets a redirect stub.
+REDIRECTS = {
+    'what-we-do.html': 'impact.html',
+    'how-we-work.html': 'approach.html',
+    'platform.html': 'approach.html',
+    'insights/the-brain-is-the-asset.html': 'insights/learn-the-business-once.html',
+    'insights/agents-need-context.html': 'insights/ai-in-the-portfolio.html',
+}
 
 
 def menu_html(r):
@@ -94,12 +98,10 @@ def menu_html(r):
 
     def details(items):
         return ''.join(f'<a href="{r}{h}">{t}<span>{d}</span></a>' for h, t, d in items)
-    groups = [('services', 'What we do', SERVICES, 'Across the deal lifecycle',
-               'We work where the deal needs the understanding most, from the first look at a data room to the last buyer meeting.'),
-              ('platform', 'The Brain', PLATFORM, 'A platform, not a report',
-               'A living knowledge graph of the company and an agent runtime that works on it every day.'),
-              ('work', 'How we work', WORK, 'Agents and people, together',
-               'A swarm of agents does the reading and the analysis; our team does the interviews and the heavy lifting.'),
+    groups = [('impact', 'Impact', IMPACT, 'Impact at every stage of ownership',
+               'We work where understanding the business decides the outcome, from the first look at a target to the last buyer meeting.'),
+              ('approach', 'Our approach', APPROACH, 'AI-native services',
+               'Agents for scale, our team for the heavy lift, and a standard implementation that lands in two weeks.'),
               ('company', 'Company', COMPANY, 'Big Beautiful Brain',
                'AI-native services for private equity and corporate acquirers.')]
     nav = ''.join(f'<div class="menu-group"><button type="button" data-detail="{g}" aria-expanded="false">{label}{CHEV}</button>'
@@ -109,12 +111,12 @@ def menu_html(r):
                      for i, (g, label, items, head, blurb) in enumerate(groups))
     promo = (f'<aside class="menu-promo"><div class="media"><img src="{img_url("interview", 900)}" alt="Two colleagues in conversation by a window" loading="lazy"></div>'
              f'<p class="eyebrow dim">Perspective</p><h4>Why the first 100 days decide the hold</h4>'
-             f'<p class="small">What a new owner needs to know in the first month, and why most of it is not in the data room.</p>'
+             f'<p class="small">What a new owner needs to know in the first two weeks, and why most of it is not in the data room.</p>'
              f'<div><a class="btn" href="{r}insights/first-100-days.html">Read the perspective {ARROW}</a></div></aside>')
     return (f'<div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Site menu">'
             f'<div class="menu-top"><button class="menu-btn" type="button" data-menu-close aria-label="Close menu">{CLOSE}</button>'
             f'<a class="brand" href="{r}index.html">{MARK}<span class="brand-name">Big Beautiful Brain</span></a>'
-            f'<span class="spacer"></span><a class="btn" href="{r}contact.html">Start a pilot {ARROW}</a></div>'
+            f'<span class="spacer"></span><a class="btn" href="{r}contact.html">Talk to us {ARROW}</a></div>'
             f'<div class="menu-body"><nav class="menu-nav" aria-label="Main">{nav}</nav>'
             f'<div class="menu-detail">{panels}</div>{promo}</div></div>')
 
@@ -132,7 +134,7 @@ def header_html(r, subnav, out):
             f'<a class="brand" href="{r}index.html" aria-label="Big Beautiful Brain home">{MARK}<span class="brand-name">Big Beautiful Brain</span></a></div>'
             f'{sub}'
             f'<div class="pill header-actions"><a class="text-link" href="{r}insights/index.html">Insights</a>'
-            f'<a class="btn" href="{r}contact.html">Start a pilot {ARROW}</a></div>'
+            f'<a class="btn" href="{r}contact.html">Talk to us {ARROW}</a></div>'
             f'</div></header>')
 
 
@@ -141,12 +143,12 @@ def footer_html(r):
         return '<ul>' + ''.join(f'<li><a href="{r}{h}">{t}</a></li>' for h, t, _ in items) + '</ul>'
     return (f'<footer class="site-footer"><div class="container"><div class="footer-grid">'
             f'<div><a class="footer-brand brand" href="{r}index.html">{MARK}<span class="brand-name">Big Beautiful Brain</span></a>'
-            f'<p class="footer-blurb">AI-native services for private equity and corporate acquirers. We capture how a business works '
-            f'and keep that knowledge working for you, from diligence to exit.</p>'
-            f'<a class="btn" href="{r}contact.html">Start a pilot {ARROW}</a></div>'
-            f'<div><h4>What we do</h4>{lst(SERVICES)}</div>'
-            f'<div><h4>The Brain</h4>{lst(PLATFORM)}</div>'
-            f'<div><h4>Company</h4>{lst(COMPANY + [("how-we-work.html", "How we work", "")])}</div>'
+            f'<p class="footer-blurb">AI-native services for private equity and corporate acquirers. We get your head and hands '
+            f'around a business in two weeks, and measure the impact for as long as you own it.</p>'
+            f'<a class="btn" href="{r}contact.html">Talk to us {ARROW}</a></div>'
+            f'<div><h4>Impact</h4>{lst(IMPACT)}</div>'
+            f'<div><h4>Our approach</h4>{lst(APPROACH)}</div>'
+            f'<div><h4>Company</h4>{lst(COMPANY)}</div>'
             f'</div><div class="footer-bottom"><span>&copy; <span data-year>2026</span> Big Beautiful Brain &middot; '
             f'<a href="mailto:{EMAIL}">{EMAIL}</a></span><span>bigbeautifulbrain.si &middot; Photography: Unsplash</span></div>'
             f'</div></footer>')
@@ -211,6 +213,17 @@ def main():
         with open(dest, 'w', encoding='utf-8') as f:
             f.write(html)
         built.append(out)
+    for old, new in REDIRECTS.items():
+        depth = old.count('/')
+        target = '../' * depth + new
+        stub = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Moved | Big Beautiful Brain</title>'
+                f'<meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/{new}">'
+                f'<meta http-equiv="refresh" content="0; url={target}"></head>'
+                f'<body><p>This page has moved to <a href="{target}">{SITE}/{new}</a>.</p></body></html>')
+        dest = os.path.join(ROOT, old)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, 'w', encoding='utf-8') as f:
+            f.write(stub)
     urls = ''.join(f'<url><loc>{SITE}/{"" if o == "index.html" else o.replace("index.html", "")}</loc></url>'
                    for o in built if o not in ('404.html', 'thanks.html'))
     with open(os.path.join(ROOT, 'sitemap.xml'), 'w') as f:
