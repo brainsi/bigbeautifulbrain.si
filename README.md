@@ -111,5 +111,5 @@ gh api -X PUT repos/brainsi/bigbeautifulbrain.si/pages -F https_enforced=true
 1. The pages load 33 photos from images.unsplash.com (the IDs are in `IMAGES` in
    `_src/build.py`). To self-host them, download them into `assets/img/photos/` and point
    `img_url()` at the local files. The Unsplash licence allows this without attribution.
-2. Review the founder bio on `about.html`, the first-deployment numbers and the reference line on
+2. Review the founders section on `about.html` (both founders, unnamed), the first-deployment numbers and the reference line on
    the home page, and the pricing language.
