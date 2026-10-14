@@ -104,13 +104,13 @@ PE_WORK = [
     ('private-equity/how-we-work.html#faq', 'Questions we hear', 'Ownership, models, data, time'),
 ]
 RG_SERVICES = [
-    ('restaurant-groups/what-we-do.html#acquire', 'Buying a restaurant or a group', 'What each location really earns, before you sign'),
+    ('restaurant-groups/what-we-do.html#acquire', 'Acquiring a concept or a group', 'What each venue really earns, before you sign'),
     ('restaurant-groups/what-we-do.html#absorb', 'The first 90 days', 'Absorb a concept without losing what made it work'),
-    ('restaurant-groups/what-we-do.html#operate', 'Every location, one picture', 'Prime cost, labor and guests across the group'),
-    ('restaurant-groups/what-we-do.html#portfolio', 'Open, fix or close', 'Site decisions made with evidence'),
-    ('restaurant-groups/what-we-do.html#guests', 'Events, catering and regulars', 'The revenue that compounds, followed through'),
+    ('restaurant-groups/what-we-do.html#operate', 'Every venue, one picture', 'Prime cost, labor and guests across the group'),
+    ('restaurant-groups/what-we-do.html#portfolio', 'Portfolio optimization', 'Remodel, convert or close on venue-level evidence'),
+    ('restaurant-groups/what-we-do.html#guests', 'Private events, catering and regulars', 'The revenue that compounds, followed through'),
     ('restaurant-groups/what-we-do.html#people', 'People and know-how', 'Keep what your best people know'),
-    ('restaurant-groups/what-we-do.html#sell', 'Recapitalization or sale', 'Evidence organized for the buyer'),
+    ('restaurant-groups/what-we-do.html#sell', 'Recapitalization or sale', 'Evidence organized before the process begins'),
 ]
 RG_WORK = [
     ('restaurant-groups/how-we-work.html#phases', 'How an engagement runs', 'Two weeks to a working picture of the group'),
@@ -136,7 +136,7 @@ PE_SITE = [
 ]
 RG_SITE = [
     ('restaurant-groups/index.html', 'Overview', 'For partners at restaurant and hospitality groups'),
-    ('restaurant-groups/what-we-do.html', 'What we do', 'From acquisition to sale'),
+    ('restaurant-groups/what-we-do.html', 'What we do', 'From acquisition to the next transaction'),
     ('restaurant-groups/how-we-work.html', 'How we work', 'Two weeks to a working picture'),
 ]
 
@@ -154,26 +154,26 @@ AUDIENCES = {
                     'A swarm of agents does the reading and the analysis; our team does the interviews and the heavy lifting.'),
                    APPROACH_GROUP, COMPANY_GROUP],
         'promo': ('interview', 'Two colleagues in conversation by a window', 'Perspective', 'Why the first 100 days decide the hold',
-                  'What a new owner needs to know in the first month, and why most of it is not in the data room.',
+                  'What a new sponsor needs to know in the first month, and why most of it is not in the data room.',
                   'insights/first-100-days.html'),
-        'blurb': 'AI-native services for private equity firms and corporate acquirers. We get you to a clear picture of a business '
-                 'in weeks, and keep that understanding working for you from diligence to exit.',
+        'blurb': 'AI-native services for private equity sponsors and corporate acquirers. We get you to a clear picture of each company '
+                 'you back in weeks, and keep that understanding working for you from diligence to exit.',
         'cols': [('What we do', PE_SERVICES), ('Our approach', APPROACH),
                  ('Company', COMPANY + [('private-equity/how-we-work.html', 'How we work', ''),
                                         ('restaurant-groups/index.html', 'For restaurant groups', '')])],
     },
     'rg': {
         'contact': 'contact.html?for=rg',
-        'groups': [('services', 'What we do', RG_SERVICES, 'From acquisition to sale',
-                    'We work where the group needs the understanding most: buying, absorbing, running, growing, pruning and selling.'),
+        'groups': [('services', 'What we do', RG_SERVICES, 'From acquisition to the next transaction',
+                    'We work where the group needs the understanding most: acquisitions, integration, operations, openings, conversions and the next transaction.'),
                    ('work', 'How we work', RG_WORK, 'On the floor and in the systems',
                     'Agents read the POS, the invoices and the schedules; our team works the kitchens, the floors and the offices.'),
                    APPROACH_GROUP, COMPANY_GROUP],
-        'promo': ('rg_pass', 'Chefs working the pass of an open kitchen', 'Perspective', 'The first 90 days after you buy a restaurant',
-                  'What a new owner needs to learn before the regulars notice, and why most of it lives in the chef and the GM.',
+        'promo': ('rg_pass', 'Chefs working the pass of an open kitchen', 'Perspective', 'The first 90 days after a concept joins the group',
+                  'What the group needs to learn before the regulars notice, and why most of it lives with the chef and the GM.',
                   'insights/first-90-days-restaurant.html'),
-        'blurb': 'AI-native services for restaurant and hospitality groups. We get you to a clear picture of every location in '
-                 'weeks, and keep that understanding working for you from the acquisition to the sale.',
+        'blurb': 'AI-native services for restaurant and hospitality groups. When a concept joins the group, we get you to a clear '
+                 'picture of it in weeks, and keep that understanding working through every opening, acquisition and transaction.',
         'cols': [('What we do', RG_SERVICES), ('Our approach', APPROACH),
                  ('Company', COMPANY + [('restaurant-groups/how-we-work.html', 'How we work', ''),
                                         ('private-equity/index.html', 'For private equity', '')])],
@@ -181,15 +181,15 @@ AUDIENCES = {
     'all': {
         'contact': 'contact.html',
         'groups': [('pe', 'Private equity', PE_SITE, 'For partners at private equity firms',
-                    'A living brain for every business you buy, from the first data room to the exit.'),
+                    'A living brain for every company you back, from the first look at the data room to the exit.'),
                    ('rg', 'Restaurant groups', RG_SITE, 'For partners at restaurant and hospitality groups',
-                    'Restaurants, bars, nightlife, events and destinations: absorb every acquisition fast, run lean and grow with evidence.'),
+                    'Restaurants, nightlife, events and destinations: integrate every concept that joins the group and grow on venue-level evidence.'),
                    APPROACH_GROUP, COMPANY_GROUP],
         'promo': ('glass_facade', 'Office windows lit at night', 'Perspective', 'Agents that stay',
                   'Why the agents that create value follow one journey for months, and what they need to do it well.',
                   'insights/agents-that-stay.html'),
-        'blurb': 'AI-native services for private equity firms and for restaurant and hospitality groups. We get owners to a clear '
-                 'picture of a business in weeks, and keep that understanding working until they sell.',
+        'blurb': 'AI-native services for acquisitions, mergers and new ventures, for private equity sponsors and hospitality groups. '
+                 'We get you to a clear picture of each new investment in weeks, and keep that understanding working through to the next transaction.',
         'cols': [('Private equity', PE_SITE), ('Restaurant groups', RG_SITE), ('Our approach', APPROACH), ('Company', COMPANY)],
     },
 }

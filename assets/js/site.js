@@ -83,41 +83,77 @@
   if (canvas && canvas.getContext) {
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0, DPR = 1, nodes = [], edges = [], pulses = [], t0 = performance.now();
-    // pages can set their own labels (data-labels, "|" separated) and where the brain sits (data-brain: cx,cy,rx,ry as fractions)
+    // pages can set their own labels (data-labels, "|" separated) and where the brain sits (data-brain: cx,cy,rx,ry as fractions).
+    // data-layout="field" spreads two hemispheres across the whole hero, with data-labels on the left and data-labels-b on the
+    // right; data-tone="dark" draws light on dark; elements marked data-brain-avoid keep labels off them and dim the nodes behind
     var LABELS = (canvas.getAttribute('data-labels') || 'Customers|Operations|Finance|People|Vendors|Product|Sales|Systems|Risks|Processes|Contracts|KPIs|Partners|Pricing').split('|');
+    var LABELS_B = canvas.hasAttribute('data-labels-b') ? canvas.getAttribute('data-labels-b').split('|') : null;
     var PLACE = (canvas.getAttribute('data-brain') || '0.71,0.44,0.265,0.36').split(',').map(parseFloat);
+    var FIELD = canvas.getAttribute('data-layout') === 'field';
+    var DARK = canvas.getAttribute('data-tone') === 'dark';
+    var INK = DARK ? '255,255,255' : '11,27,43', LINE = DARK ? '178,240,218' : '11,27,43', GLOW = DARK ? '142,245,201' : '36,190,140';
+    var focus = 0, focusTo = 0, pointer = null;
+    function avoidRects() {
+      var c = canvas.getBoundingClientRect();
+      return Array.prototype.map.call(hero ? hero.querySelectorAll('[data-brain-avoid]') : [], function (el) {
+        var r = el.getBoundingClientRect();
+        return [r.left - c.left - 16, r.top - c.top - 12, r.right - c.left + 16, r.bottom - c.top + 12];
+      });
+    }
     function seed() {
       var mobile = W < 760;
       var count = Math.round(Math.max(44, Math.min(120, (W * H) / (mobile ? 9000 : 14500))));
       var cx = W * PLACE[0], cy = H * PLACE[1], rx = W * PLACE[2], ry = H * PLACE[3];
+      var spread = 0.18, size = 0.82;
       if (canvas.hasAttribute('data-brain')) count = Math.round(Math.max(40, Math.min(90, (rx * ry) / 260)));
+      if (FIELD) {
+        // two hemispheres side by side across the hero, touching in the middle
+        cx = W * 0.5; cy = H * 0.5; rx = W * 0.52; ry = H * 0.5; spread = 0.47; size = 0.6;
+        count = Math.round(Math.max(80, Math.min(240, (W * H) / (mobile ? 3600 : 5600))));
+      }
       // narrow screens: the copy spans the full width, so keep the brain in the band between the header and the copy
-      var copy = W < 1000 && hero && hero.querySelector('.hero-copy');
+      var copy = !FIELD && W < 1000 && hero && hero.querySelector('.hero-copy');
       if (copy) {
         var top = 88, bottom = copy.getBoundingClientRect().top - canvas.getBoundingClientRect().top + 4;
         cx = W * 0.5; cy = top + (bottom - top) / 2; rx = W * 0.44; ry = Math.max(56, (bottom - top) / 2);
       }
+      var avoid = avoidRects();
+      var inside = function (x, y) { return avoid.some(function (o) { return x > o[0] && x < o[2] && y > o[1] && y < o[3]; }); };
       nodes = [];
       for (var i = 0; i < count; i++) {
         var a = Math.random() * Math.PI * 2, r = Math.pow(Math.random(), 0.7);
         // two lobes, so the cloud reads as a brain rather than a disc
         var lobe = i % 2 === 0 ? -1 : 1;
-        var x = cx + lobe * rx * 0.18 + Math.cos(a) * rx * 0.82 * r;
+        var x = cx + lobe * rx * spread + Math.cos(a) * rx * size * r;
         var y = cy + Math.sin(a) * ry * r * (0.92 + 0.08 * Math.cos(a * 2));
-        nodes.push({ x: x, y: y, ox: x, oy: y, vx: 0, vy: 0, r: 1.3 + Math.random() * 2.1, ph: Math.random() * 6.28, label: i < LABELS.length ? LABELS[i] : null });
+        var label = null;
+        nodes.push({ x: x, y: y, ox: x, oy: y, r: 1.3 + Math.random() * 2.1, ph: Math.random() * 6.28, lobe: lobe, dim: inside(x, y), label: label || null });
       }
-      // drop any label that would overlap another or leave the canvas; boxes are padded for the drift
+      // labels go on nodes that sit in open, visible space; on the gateway each hemisphere carries its own vocabulary
+      (function () {
+        var c0 = canvas.getBoundingClientRect();
+        var covers = Array.prototype.map.call(hero ? hero.querySelectorAll('[data-brain-cover]') : [], function (el) {
+          var r = el.getBoundingClientRect();
+          return [r.left - c0.left, r.top - c0.top + r.height * 0.3, r.right - c0.left, r.bottom - c0.top];
+        });
+        var open = function (nd) { return !nd.dim && !covers.some(function (o) { return nd.ox > o[0] && nd.ox < o[2] && nd.oy > o[1] && nd.oy < o[3]; }); };
+        (LABELS_B ? [[-1, LABELS], [1, LABELS_B]] : [[0, LABELS]]).forEach(function (set) {
+          var pool = nodes.filter(function (nd) { return (!set[0] || nd.lobe === set[0]) && open(nd); }).sort(function () { return Math.random() - 0.5; });
+          set[1].forEach(function (t, k) { if (pool[k]) pool[k].label = t; });
+        });
+      })();
+      // drop any label that would overlap another, an avoided element, or leave the canvas; boxes are padded for the drift
       ctx.font = '600 11px Inter, -apple-system, sans-serif';
-      var boxes = [];
+      var boxes = avoid.slice();
       nodes.forEach(function (n) {
         if (!n.label) return;
         var w = ctx.measureText(n.label.toUpperCase()).width;
         var b = [n.ox - 4, n.oy - 32, n.ox + 22 + w, n.oy + 8];
-        var clash = b[2] > W - 8 || b[1] < 80 || boxes.some(function (o) { return b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]; });
+        var clash = b[0] < 12 || b[2] > W - 8 || b[1] < 80 || boxes.some(function (o) { return b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]; });
         if (clash) n.label = null; else boxes.push(b);
       });
       edges = [];
-      var maxD = Math.min(W, H) * (mobile ? 0.17 : 0.13);
+      var maxD = FIELD ? Math.min(132, Math.max(84, Math.min(W, H) * 0.14)) : Math.min(W, H) * (mobile ? 0.17 : 0.13);
       for (var p = 0; p < nodes.length; p++) {
         for (var q = p + 1; q < nodes.length; q++) {
           var dx = nodes[p].ox - nodes[q].ox, dy = nodes[p].oy - nodes[q].oy;
@@ -152,32 +188,43 @@
           n.y = n.oy + Math.sin(time * 0.3 + n.ph) * 5;
         }
       }
+      // hovering a door brightens its hemisphere; the pointer lights the nodes around it
+      focus += (focusTo - focus) * 0.06;
+      var weight = function (nd) {
+        var w = 1 + focus * nd.lobe * 0.9;
+        if (pointer) { var px0 = nd.x - pointer[0], py0 = nd.y - pointer[1]; w += Math.max(0, 1 - Math.sqrt(px0 * px0 + py0 * py0) / 160) * 1.4; }
+        return nd.dim ? w * 0.45 : w;
+      };
+      for (i = 0; i < nodes.length; i++) nodes[i].w = weight(nodes[i]);
       ctx.lineWidth = 1;
+      var base = DARK ? 0.26 : 0.16;
       for (i = 0; i < edges.length; i++) {
         var e = edges[i], A = nodes[e[0]], B = nodes[e[1]];
-        ctx.strokeStyle = 'rgba(11,27,43,' + (0.16 * (1 - e[2]) + 0.02).toFixed(3) + ')';
+        ctx.strokeStyle = 'rgba(' + LINE + ',' + Math.min(0.6, (base * (1 - e[2]) + 0.02) * Math.min(A.w, B.w)).toFixed(3) + ')';
         ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
       }
       if (!still) {
-        if (pulses.length < 26 && Math.random() < 0.35) spawnPulse();
+        if (pulses.length < (FIELD ? 40 : 26) && Math.random() < 0.35) spawnPulse();
         for (i = pulses.length - 1; i >= 0; i--) {
           var P = pulses[i]; P.t += P.s;
           if (P.t >= 1) { pulses.splice(i, 1); if (Math.random() < 0.55) { var nb = edges.filter(function (ed) { return ed[0] === P.b || ed[1] === P.b; }); if (nb.length) { var ne = nb[(Math.random() * nb.length) | 0]; pulses.push({ a: P.b, b: ne[0] === P.b ? ne[1] : ne[0], t: 0, s: P.s }); } } continue; }
           var a1 = nodes[P.a], b1 = nodes[P.b];
+          if (a1.dim && b1.dim) continue;
           var px = a1.x + (b1.x - a1.x) * P.t, py = a1.y + (b1.y - a1.y) * P.t;
           var g = ctx.createRadialGradient(px, py, 0, px, py, 9);
-          g.addColorStop(0, 'rgba(36,190,140,0.95)'); g.addColorStop(1, 'rgba(36,190,140,0)');
+          g.addColorStop(0, 'rgba(' + GLOW + ',0.95)'); g.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py, 9, 0, 6.283); ctx.fill();
         }
       }
       for (i = 0; i < nodes.length; i++) {
         n = nodes[i];
-        ctx.fillStyle = n.label ? 'rgba(11,27,43,0.88)' : 'rgba(11,27,43,0.55)';
+        var k = Math.min(1.6, n.w);
+        ctx.fillStyle = 'rgba(' + INK + ',' + Math.min(0.95, (n.label ? 0.88 : (DARK ? 0.5 : 0.55)) * k).toFixed(3) + ')';
         ctx.beginPath(); ctx.arc(n.x, n.y, n.label ? n.r + 1.4 : n.r, 0, 6.283); ctx.fill();
         if (n.label && W > 760) {
-          var alpha = 0.35 + 0.45 * (0.5 + 0.5 * Math.sin(time * 0.6 + n.ph));
+          var alpha = (0.35 + 0.45 * (0.5 + 0.5 * Math.sin(time * 0.6 + n.ph))) * Math.min(1.25, k);
           ctx.font = '600 11px Inter, -apple-system, sans-serif';
-          ctx.fillStyle = 'rgba(11,27,43,' + alpha.toFixed(2) + ')';
+          ctx.fillStyle = 'rgba(' + (DARK ? GLOW : INK) + ',' + Math.min(0.95, alpha).toFixed(2) + ')';
           ctx.fillText(n.label.toUpperCase(), n.x + 8, n.y - 7);
         }
       }
@@ -190,6 +237,18 @@
     var heroVisible = true;
     if ('IntersectionObserver' in window && hero) {
       new IntersectionObserver(function (en) { heroVisible = en[0].isIntersecting; if (heroVisible && running) start(); else stop(); }).observe(hero);
+    }
+    if (hero) {
+      Array.prototype.forEach.call(hero.querySelectorAll('[data-lobe]'), function (el) {
+        var on = function () { focusTo = el.getAttribute('data-lobe') === 'a' ? -1 : 1; };
+        var off = function () { focusTo = 0; };
+        el.addEventListener('mouseenter', on); el.addEventListener('focus', on);
+        el.addEventListener('mouseleave', off); el.addEventListener('blur', off);
+      });
+      if (FIELD) {
+        hero.addEventListener('pointermove', function (ev) { var c = canvas.getBoundingClientRect(); pointer = [ev.clientX - c.left, ev.clientY - c.top]; });
+        hero.addEventListener('pointerleave', function () { pointer = null; });
+      }
     }
     window.addEventListener('resize', function () {
       clearTimeout(resize._t);

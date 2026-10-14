@@ -417,19 +417,32 @@ a.tile:hover { background: var(--paper-2); }
 .aud-rg .mesh .m4 { background: #f3e2c4; }
 
 /* ---------- gateway hero (home) ---------- */
-.gateway { display: block; min-height: 100svh; padding: 124px 0 22px; }
+.gateway { display: block; min-height: 100svh; padding: 124px 0 22px; background: var(--ink); color: rgba(255, 255, 255, 0.74); }
+/* the gateway is an evening scene: cool light on the private equity side, warm light on the hospitality side */
+.gateway .mesh span { opacity: 0.26; }
+.gateway .mesh .m1 { width: 48vw; height: 48vw; left: -6%; top: -8%; background: var(--mint); }
+.gateway .mesh .m2 { width: 40vw; height: 40vw; left: 14%; top: 44%; background: var(--sky); }
+.gateway .mesh .m3 { width: 40vw; height: 40vw; left: 58%; top: 46%; background: #ff6f91; opacity: 0.16; }
+.gateway .mesh .m4 { width: 44vw; height: 44vw; left: 66%; top: -12%; background: #f7a35c; opacity: 0.15; }
+.gateway .grain { opacity: 0.1; mix-blend-mode: overlay; background-image: radial-gradient(rgba(255, 255, 255, 0.5) 0.6px, transparent 0.7px); }
+.gateway .eyebrow { color: var(--mint); }
+.gateway .display { color: #fff; }
+.gateway .lead { color: rgba(255, 255, 255, 0.72); }
 .gateway .motion-toggle { top: 92px; bottom: auto; }
-.gateway .gw-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; align-items: end; }
-.gateway .display { font-size: clamp(42px, 4.7vw, 74px); max-width: 19ch; }
-.gateway .lead { max-width: 640px; margin: 20px 0 0; }
-.gateway .gw-ask { display: flex; align-items: center; gap: 12px; justify-self: end; margin: 0 0 6px; font: 700 12.5px/1.2 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink); }
-.gateway .gw-ask i { width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.7); display: grid; place-items: center; box-shadow: var(--shadow-pill); animation: nudge 2.4s var(--ease) infinite; }
+.gateway .gw-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.gateway .hero-copy { max-width: 820px; }
+.gateway .display { font-size: clamp(42px, 4.7vw, 74px); max-width: 22ch; margin: 0 auto; text-wrap: balance; }
+.gateway .lead { max-width: 660px; margin: 20px auto 0; text-wrap: balance; }
+.gateway .gw-ask { display: flex; align-items: center; gap: 12px; margin: 24px 0 0; font: 700 12.5px/1.2 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: #fff; }
+.gateway .gw-ask i { width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); display: grid; place-items: center; animation: nudge 2.4s var(--ease) infinite; }
 .gateway .gw-ask svg { width: 14px; height: 14px; transform: rotate(90deg); }
 @keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
-.gw-doors { display: flex; gap: 14px; margin-top: 32px; height: clamp(420px, calc(100svh - 436px), 680px); }
-.door { position: relative; flex: 1 1 0; min-width: 0; border-radius: 24px; overflow: hidden; isolation: isolate; color: #fff; text-decoration: none; background: var(--ink); box-shadow: 0 24px 60px rgba(11, 27, 43, 0.18); transition: flex-grow 0.8s var(--ease), box-shadow 0.4s ease; }
+.gw-doors { display: flex; gap: 14px; margin-top: 30px; height: clamp(420px, calc(100svh - 492px), 680px); }
+.door { position: relative; flex: 1 1 0; min-width: 0; border-radius: 24px; overflow: hidden; isolation: isolate; color: #fff; text-decoration: none; background: transparent; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); transition: flex-grow 0.8s var(--ease), box-shadow 0.4s ease; }
 .door img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; filter: saturate(0.88) contrast(1.05); transform: scale(1.03); transition: transform 1.6s var(--ease), filter 0.7s var(--ease); }
-.door::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11, 27, 43, 0.3) 0%, rgba(11, 27, 43, 0) 22%, rgba(11, 27, 43, 0.3) 42%, rgba(11, 27, 43, 0.8) 68%, rgba(11, 27, 43, 0.94) 100%); }
+/* the top of each door dissolves into the network behind it */
+.door img { -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 16%, #000 50%); mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 16%, #000 50%); }
+.door::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11, 27, 43, 0) 0%, rgba(11, 27, 43, 0) 36%, rgba(11, 27, 43, 0.42) 54%, rgba(11, 27, 43, 0.84) 74%, rgba(11, 27, 43, 0.95) 100%); }
 .door-top { position: absolute; top: 22px; left: 24px; right: 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .door-chip { display: inline-flex; align-items: center; gap: 9px; padding: 9px 13px; border-radius: 11px; background: rgba(255, 255, 255, 0.16); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font: 700 11.5px/1 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; }
 .door-chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 4px rgba(142, 245, 201, 0.25); }
@@ -445,8 +458,8 @@ a.tile:hover { background: var(--paper-2); }
 .door-go { flex: none; display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 18px; border-radius: 16px; background: var(--mint); color: var(--ink); font: 700 13px/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; transition: padding 0.35s var(--ease), background 0.25s; }
 .door-go .arrow { width: 16px; height: 16px; transition: transform 0.35s var(--ease); }
 .gw-doors:hover .door { flex-grow: 0.84; }
-.gw-doors .door:hover, .gw-doors .door:focus-visible { flex-grow: 1.16; box-shadow: 0 30px 70px rgba(11, 27, 43, 0.28); }
-.gw-doors:hover .door:not(:hover) img { filter: saturate(0.45) brightness(0.72); }
+.gw-doors .door:hover, .gw-doors .door:focus-visible { flex-grow: 1.16; box-shadow: inset 0 0 0 1px rgba(142, 245, 201, 0.55), 0 30px 80px rgba(0, 0, 0, 0.35); }
+.gw-doors:hover .door:not(:hover) img { filter: saturate(0.45) brightness(0.6); }
 .door:hover img, .door:focus-visible img { transform: scale(1.08); }
 .door:hover .door-tags li, .door:focus-visible .door-tags li { opacity: 1; transform: none; }
 .door:hover .door-go, .door:focus-visible .door-go { padding-right: 26px; background: var(--mint-strong); }
@@ -593,13 +606,12 @@ a.tile:hover { background: var(--paper-2); }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-grid > :first-child { grid-column: 1 / -1; }
   .header-actions .text-link, .header-actions .aud-switch { display: none; }
-  .gateway .gw-head { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .gateway .gw-ask { justify-self: start; margin-top: 26px; }
-  .gateway canvas.brain-canvas { display: none; }
   .gateway .motion-toggle { display: none; }
   .gw-doors { height: auto; flex-direction: column; }
   .door { flex: none; display: flex; flex-direction: column; justify-content: flex-end; min-height: 460px; padding-top: 76px; }
   .door-copy { position: relative; left: auto; right: auto; bottom: auto; padding: 0 24px 24px; }
+  .door img { -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, #000 38%); mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, #000 38%); }
+  .gateway .mesh span { width: 110vw; height: 110vw; }
   .gw-doors:hover .door, .gw-doors .door:hover { flex-grow: 0; }
   .door-tags li { opacity: 1; transform: none; }
   .mosaic { grid-template-columns: repeat(5, 62vw); height: 360px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
@@ -626,6 +638,8 @@ a.tile:hover { background: var(--paper-2); }
   .menu-top .aud-switch { display: none; }
   .menu-nav .aud-switch { display: flex; }
   .gateway { padding-top: 112px; }
+  .gateway .gw-head { align-items: flex-start; text-align: left; }
+  .gateway .display, .gateway .lead { margin-left: 0; }
   .door { min-height: 0; }
   .door-copy { padding: 0 20px 22px; }
   .door-row { flex-direction: column; align-items: flex-start; }
