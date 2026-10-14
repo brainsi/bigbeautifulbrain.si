@@ -83,11 +83,14 @@
   if (canvas && canvas.getContext) {
     var ctx = canvas.getContext('2d');
     var W = 0, H = 0, DPR = 1, nodes = [], edges = [], pulses = [], t0 = performance.now();
-    var LABELS = ['Customers', 'Operations', 'Finance', 'People', 'Vendors', 'Product', 'Sales', 'Systems', 'Risks', 'Processes', 'Contracts', 'KPIs', 'Partners', 'Pricing'];
+    // pages can set their own labels (data-labels, "|" separated) and where the brain sits (data-brain: cx,cy,rx,ry as fractions)
+    var LABELS = (canvas.getAttribute('data-labels') || 'Customers|Operations|Finance|People|Vendors|Product|Sales|Systems|Risks|Processes|Contracts|KPIs|Partners|Pricing').split('|');
+    var PLACE = (canvas.getAttribute('data-brain') || '0.71,0.44,0.265,0.36').split(',').map(parseFloat);
     function seed() {
       var mobile = W < 760;
       var count = Math.round(Math.max(44, Math.min(120, (W * H) / (mobile ? 9000 : 14500))));
-      var cx = W * 0.71, cy = H * 0.44, rx = W * 0.265, ry = H * 0.36;
+      var cx = W * PLACE[0], cy = H * PLACE[1], rx = W * PLACE[2], ry = H * PLACE[3];
+      if (canvas.hasAttribute('data-brain')) count = Math.round(Math.max(40, Math.min(90, (rx * ry) / 260)));
       // narrow screens: the copy spans the full width, so keep the brain in the band between the header and the copy
       var copy = W < 1000 && hero && hero.querySelector('.hero-copy');
       if (copy) {
@@ -181,13 +184,17 @@
     }
     var raf = 0;
     function loop(now) { draw(now, false); raf = requestAnimationFrame(loop); }
-    function start() { if (!raf) raf = requestAnimationFrame(loop); }
+    // a canvas hidden by the layout (the gateway hides it on narrow screens) has nothing to animate
+    function start() { if (!raf && canvas.clientWidth) raf = requestAnimationFrame(loop); }
     function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; }
     var heroVisible = true;
     if ('IntersectionObserver' in window && hero) {
       new IntersectionObserver(function (en) { heroVisible = en[0].isIntersecting; if (heroVisible && running) start(); else stop(); }).observe(hero);
     }
-    window.addEventListener('resize', function () { clearTimeout(resize._t); resize._t = setTimeout(resize, 150); });
+    window.addEventListener('resize', function () {
+      clearTimeout(resize._t);
+      resize._t = setTimeout(function () { resize(); if (!canvas.clientWidth) stop(); else if (running && heroVisible) start(); }, 150);
+    });
     resize();
     // web fonts change the height of the copy, and the narrow layout places the brain from it
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
@@ -343,6 +350,28 @@
         formButton.removeAttribute('aria-busy');
       });
     });
+  }
+
+  /* ---------- contact form: the industry choice (preset by ?for=pe or ?for=rg) narrows the stage list ---------- */
+  var stage = document.querySelector('[data-stage]');
+  var industries = document.querySelectorAll('input[data-aud]');
+  if (stage && industries.length) {
+    var groups = Array.prototype.map.call(stage.querySelectorAll('optgroup'), function (g) { return g.cloneNode(true); });
+    var showStages = function (aud) {
+      stage.innerHTML = '';
+      groups.forEach(function (g) {
+        if (aud !== 'pe' && aud !== 'rg') { stage.appendChild(g.cloneNode(true)); return; }
+        if (g.getAttribute('data-aud') !== aud) return;
+        Array.prototype.forEach.call(g.children, function (o) { stage.appendChild(o.cloneNode(true)); });
+      });
+    };
+    var wanted = (window.URLSearchParams && new URLSearchParams(location.search).get('for')) || '';
+    industries.forEach(function (input) {
+      if (input.getAttribute('data-aud') === wanted) input.checked = true;
+      input.addEventListener('change', function () { if (input.checked) showStages(input.getAttribute('data-aud')); });
+    });
+    var picked = document.querySelector('input[data-aud]:checked');
+    showStages(picked ? picked.getAttribute('data-aud') : '');
   }
 
   /* ---------- section nav follows the section in view ---------- */

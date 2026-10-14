@@ -1,9 +1,9 @@
-<!--{"out": "contact.html", "title": "Contact", "description": "Start a two-week Big Beautiful Brain pilot on one portfolio company, or book a walkthrough of a working brain.", "og": "group_window"}-->
+<!--{"out": "contact.html", "title": "Contact", "description": "Start a two-week Big Beautiful Brain pilot on one portfolio company or one restaurant group, or book a walkthrough of a working brain.", "og": "group_window", "audience": "all"}-->
 <section class="page-hero">
   <div class="container">
     <p class="eyebrow" data-reveal>Contact</p>
-    <h1 class="display" data-reveal style="--d:.06s">Start with one portfolio company</h1>
-    <p class="lead" data-reveal style="--d:.12s">Tell us where the deal is and what you most need to know about the business. We will come back within two working days to arrange a call, and with a scope, a fee and a start date within a week of it.</p>
+    <h1 class="display" data-reveal style="--d:.06s">Start with one company or one group</h1>
+    <p class="lead" data-reveal style="--d:.12s">Tell us where you are and what you most need to know about the business, whether it is a portfolio company or a group of restaurants. We will come back within two working days to arrange a call, and with a scope, a fee and a start date within a week of it.</p>
   </div>
 </section>
 
@@ -19,12 +19,22 @@
           <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
         </div>
+        <fieldset class="fieldset"><legend>I work at</legend>
+          <div class="choice">
+            <label><input type="radio" name="industry" value="Private equity firm" data-aud="pe" checked> A private equity firm</label>
+            <label><input type="radio" name="industry" value="Restaurant or hospitality group" data-aud="rg"> A restaurant or hospitality group</label>
+            <label><input type="radio" name="industry" value="Another kind of acquirer" data-aud="other"> Another kind of acquirer</label>
+          </div>
+        </fieldset>
         <div class="two">
-          <div class="field"><label for="f-firm">Firm or company</label><input id="f-firm" name="firm" autocomplete="organization"></div>
+          <div class="field"><label for="f-firm">Firm, group or company</label><input id="f-firm" name="firm" autocomplete="organization"></div>
           <div class="field"><label for="f-role">Role</label><input id="f-role" name="role" autocomplete="organization-title"></div>
         </div>
-        <div class="field"><label for="f-stage">Where you are in the deal</label>
-          <select id="f-stage" name="stage"><option>Evaluating a target</option><option>In diligence or exclusivity</option><option>Signed, before closing</option><option>First 100 days</option><option>Mid-hold</option><option>Buy and build</option><option>Preparing for a sale</option><option>Something else</option></select></div>
+        <div class="field"><label for="f-stage">Where you are</label>
+          <select id="f-stage" name="stage" data-stage>
+            <optgroup label="Private equity" data-aud="pe"><option>Evaluating a target</option><option>In diligence or exclusivity</option><option>Signed, before closing</option><option>First 100 days</option><option>Mid-hold</option><option>Buy and build</option><option>Preparing for a sale</option><option>Something else</option></optgroup>
+            <optgroup label="Restaurant or hospitality group" data-aud="rg"><option>Looking at a restaurant or a group to buy</option><option>Just acquired a location or a concept</option><option>Running the group, looking for margin</option><option>Opening, relocating or closing sites</option><option>Growing events, catering or private dining</option><option>Preparing for a recapitalization or a sale</option><option>Something else</option></optgroup>
+          </select></div>
         <div class="field"><label for="f-message">What would you most like to know about the business?</label><textarea id="f-message" name="message" required></textarea></div>
         <div class="row"><button class="btn" type="submit">Send your message {{arrow}}</button></div>
         <p class="form-note">Your message goes to our team at {{email}}. We use what you send only to reply to you.</p>
@@ -32,8 +42,8 @@
       </form>
       <div data-reveal style="--d:.1s">
         <p class="eyebrow">What happens next</p>
-        <div class="step is-active" style="opacity:1; padding: 28px 0"><span class="num">01</span><h3 class="h4" style="margin: 10px 0 8px">A thirty-minute call</h3><p class="small">We learn about the deal, the company and the questions that matter most.</p></div>
-        <div class="step is-active" style="opacity:1; padding: 28px 0"><span class="num">02</span><h3 class="h4" style="margin: 10px 0 8px">A walkthrough and a scope</h3><p class="small">We show you a working brain on a sample company and agree the scope of a pilot.</p></div>
+        <div class="step is-active" style="opacity:1; padding: 28px 0"><span class="num">01</span><h3 class="h4" style="margin: 10px 0 8px">A thirty-minute call</h3><p class="small">We learn about the deal or the group, the business and the questions that matter most.</p></div>
+        <div class="step is-active" style="opacity:1; padding: 28px 0"><span class="num">02</span><h3 class="h4" style="margin: 10px 0 8px">A walkthrough and a scope</h3><p class="small">We show you a working brain on a sample business and agree the scope of a pilot.</p></div>
         <div class="step is-active" style="opacity:1; padding: 28px 0"><span class="num">03</span><h3 class="h4" style="margin: 10px 0 8px">A pilot proposal within a week</h3><p class="small">A fixed scope, fee and start date, with the access and time we need from management.</p></div>
         <p class="mt-m small">Prefer email? Write to <a class="link" href="mailto:{{email}}">{{email}}</a>.</p>
       </div>

@@ -8,12 +8,33 @@ no dependencies beyond Python 3.9 or later.
 
 | Path | What it is |
 |---|---|
-| `_src/pages/*.html` | Page bodies. Each starts with a JSON comment: output path, title, description, sub-navigation, and `noindex` where a page stays out of search. |
-| `_src/build.py` | Wraps every page in the shared head, header, menu and footer, resolves the `{{root}}`, `{{arrow}}`, `{{email}}`, `{{site}}`, `{{form_post}}`, `{{form_ajax}}` and `{{img name width}}` tokens, adds content hashes to the CSS and JS links, writes `sitemap.xml`, and fails on dashes, banned phrases or unresolved tokens. |
+| `_src/pages/*.html` | Page bodies. Each starts with a JSON comment: output path, title, description, `audience`, sub-navigation, and `noindex` where a page stays out of search. |
+| `_src/build.py` | Wraps every page in the shared head, header, menu and footer for its audience, resolves the `{{root}}`, `{{arrow}}`, `{{email}}`, `{{contact}}`, `{{site}}`, `{{form_post}}`, `{{form_ajax}}` and `{{img name width}}` tokens, adds content hashes to the CSS and JS links, writes redirect pages for moved URLs and `sitemap.xml`, and fails on dashes, banned phrases or unresolved tokens. |
 | `assets/css/site.css` | The design system. |
 | `assets/js/site.js` | Menu, scroll reveal, hero brain canvas, tabs, sticky steps, carousel, counters, section navigation, contact form. |
 | `*.html`, `insights/` | Built pages. Do not edit them by hand; edit `_src/pages` and rebuild. |
 | `CNAME` | The custom domain for GitHub Pages. |
+
+## Two sites behind one gateway
+
+The home page is a gateway: visitors choose private equity or restaurant and hospitality groups,
+and each choice leads to its own set of pages. The `audience` key in a page's header picks the
+menu, the footer, the industry switch in the header and the contact link.
+
+| Audience | Pages | Sources |
+|---|---|---|
+| `all` | The gateway (`index.html`), `approach.html`, `about.html`, `contact.html`, `insights/index.html`, shared articles | `index.html`, `approach.html`, `about.html`, `contact.html`, `insights-*.html` |
+| `pe` | `private-equity/` (overview, what we do, how we work) and the private equity articles | `pe-*.html` |
+| `rg` | `restaurant-groups/` (overview, what we do, how we work) and the restaurant group articles | `rg-*.html` |
+
+`{{contact}}` resolves to `contact.html?for=pe` or `contact.html?for=rg`, which preselects the
+industry on the contact form and narrows its "Where you are" list. The old `what-we-do.html`,
+`how-we-work.html` and `platform.html` are redirect pages generated from `REDIRECTS` in
+`_src/build.py`; they forward to the new paths and keep the `#section` part of the link.
+
+Figures on the pages come from the research briefs in `../research/` (`pe-market-brief.md`,
+`restaurant-group-market-brief.md`, `hospitality-ai-brief.md`, `persistent-agents-brief.md`).
+Each figure on a page names its source under it; keep the two in step when a figure changes.
 | `_config.yml` | Keeps `_src`, `_scratch` and this file out of the published site. |
 
 ## Build, preview, publish
@@ -87,7 +108,7 @@ gh api -X PUT repos/brainsi/bigbeautifulbrain.si/pages -F https_enforced=true
 
 ## Open items
 
-1. The pages load 15 photos from images.unsplash.com (the IDs are in `IMAGES` in
+1. The pages load 33 photos from images.unsplash.com (the IDs are in `IMAGES` in
    `_src/build.py`). To self-host them, download them into `assets/img/photos/` and point
    `img_url()` at the local files. The Unsplash licence allows this without attribution.
 2. Review the founder bio on `about.html`, the first-deployment numbers and the reference line on
